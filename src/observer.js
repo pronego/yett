@@ -46,7 +46,7 @@ export const observer = new MutationObserver(mutations => {
                         iframePlaceholder.style.height = node.getAttribute('height')+'px'
                         iframePlaceholder.classList.add('iframe-blocked')
                         // Add text + Button
-                        iframePlaceholder.innerHTML = '<p style="text-align: center">'+features.iframe_blocked_text+'<br/><button onclick="yett.unblock(\''+src+'\')>'+features.iframe_blocked_btn_unblock+'</button></p>'
+                        iframePlaceholder.innerHTML = '<p style="text-align: center">'+features.iframe_blocked_text+'<br/><button class="toggleConsentManager">'+features.iframe_blocked_btn_unblock+'</button></p>'
                         node.parentElement && node.parentElement.insertBefore(iframePlaceholder, node)
                     }
 
