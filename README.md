@@ -2,9 +2,9 @@
   Yett<br>
   <br>
   <a href="https://www.npmjs.com/package/yett"><img alt="npm-badge" src="https://img.shields.io/npm/v/yett.svg" height="20"></a>
-  <a href="https://github.com/elbywan/yett/blob/master/LICENSE"><img alt="license-badge" src="https://img.shields.io/npm/l/yett.svg" height="20"></a>
+  <a href="https://github.com/snipsco/yett/blob/master/LICENSE"><img alt="license-badge" src="https://img.shields.io/npm/l/yett.svg" height="20"></a>
   <a href="https://bundlephobia.com/result?p=yett"><img alt="size-badge" src="https://img.shields.io/bundlephobia/minzip/yett.svg"></a>
-  <a href="https://travis-ci.org/elbywan/yett"><img src="https://travis-ci.org/elbywan/yett.svg?branch=master" alt="ci-badge" height="20"></a>
+  <a href="https://travis-ci.org/snipsco/yett"><img src="https://travis-ci.org/snipsco/yett.svg?branch=master" alt="ci-badge" height="20"></a>
   <a href="#browser-compatibility"><img src="https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=!9,!10,11&microsoftedge=17" alt="bundle-badge" height="20"></a>
 </h1>
 
@@ -16,7 +16,7 @@
 
 [❓] **`So, why on Earth would I want to block scripts on my own website?`**
 
-One way to use `yett` would be to build a [GDPR compliant consent-first-analytics](https://medium.com/snips-ai/gdpr-compliant-website-analytics-putting-users-in-control-684b17a1463f), via an UI like below.
+We use `yett` in order to provide [GDPR compliant consent-first-analytics](https://medium.com/snips-ai/gdpr-compliant-website-analytics-putting-users-in-control-684b17a1463f), via an UI like below.
 
 <br>
 
@@ -27,7 +27,7 @@ One way to use `yett` would be to build a [GDPR compliant consent-first-analytic
 
 Blocking execution of analytics script (until consent is given) can be done manually, but the problem is that analytics providers often provide minified code embeds that you have to include in your html as they are. If you want to exercise control over their execution, then you have to tamper with this minified JS yourself, which is complex and does not scale well if you load several 3rd party scripts.
 
-Another thing to consider is that these scripts first setup a local buffer that record user actions locally, and then upload the data only after a remote script is loaded asynchronously. Meaning that if the whole thing is simply wrapped inside a callback *(as some other libraries do)* then every action performed by the user on the web page before the callback gets executed won't get recorded and will never appear in your analytics dashboard.
+Another thing to consider is that these scripts first setup a local buffer that record user actions locally, and then upload the data after a remote script is loaded asynchronously. Meaning that if the whole thing is simply wrapped inside a callback *(as some other libraries do)* then every action performed by the user on the web page before the callback gets executed won't get recorded and will never appear in your analytics dashboard.
 
 Thus we invented `yett`. Just drop in the script and define a domain blacklist - `yett` will take care of the rest ✨.
 
@@ -80,7 +80,7 @@ And on a side note, it is technically quite amazing to know that **[a few lines 
 </html>
 ```
 
-**⚠️ It is strongly recommended (but not necessary) that you [add type attributes](https://github.com/elbywan/yett#add-a-type-attribute-manually) to `<script>` tags having src attributes that you want to block. It has the benefit of preventing the scripts from begin downloaded in major browsers.**
+**⚠️It is strongly recommended (but not necessary) that you [add type attributes](https://github.com/elbywan/yett#add-a-type-attribute-manually) to `<script>` tags having src attributes that you want to block. It has the benefit of preventing the scripts from begin downloaded in major browsers.**
 
 **💡 In any case, if you would like to ensure that cookies are not sent to third-party servers during the initial request you can use the [`crossorigin="anonymous"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin) attribute. Check [this link](https://github.com/elbywan/yett/issues/20#issuecomment-599256485) for more details.**
 
@@ -102,6 +102,23 @@ Yett needs a `blacklist`, which is an array of regexes to test urls against.
     ]
 </script>
 ```
+
+### iframe Support
+
+If you would like to block external content loaded via iframe, you can enable the feature by setting the `YETT_IFRAME` variable.
+Iframe elements are blocked and replaced by a div placeholder of the same size until unblocked.
+The texts shown in the placeholder box can be adjusted using the variables as shown below (if not specified, the following default values are used):
+```html
+<script>
+YETT_IFRAME = true
+YETT_IFRAME_BLOCKED_TEXT = 'Blocked iframe content!'
+YETT_IFRAME_BLOCKED_BTN = 'Unblock'
+</script>
+```
+
+This replaces all `<iframe>` tags with a placeholder `<div>` element of the same dimension. If consent is given to load
+the corresponding external content, the original iframe element is added again
+and the subsequent requests are made.
 
 ### CDN
 
@@ -151,7 +168,7 @@ Otherwise, the `scriptUrlsOrRegexes` provided will be either removed from the bl
 
 ```bash
 # Clone
-git clone https://github.com/elbywan/yett
+git clone https://github.com/pronego/yett
 cd yett
 # Install
 npm i
@@ -163,10 +180,10 @@ npm run build
 
 ## Browser compatibility
 
-|                        |                    `<script>`                   |     `<script type="javascript/blocked">`    |      `document.createElement('script')`     |
-|------------------------|:-----------------------------------------------:|:-------------------------------------------:|:-------------------------------------------:|
-| **Prevents loading**   | ![](https://badges.herokuapp.com/browsers?firefox=-60&googlechrome=-66&safari=-11&iexplore=-11&microsoftedge=-17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=-11&iexplore=-11&microsoftedge=-17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=-11&microsoftedge=-17) |
-| **Prevents execution** | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=11&microsoftedge=17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=11&microsoftedge=17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=11&microsoftedge=17) |
+|                        |                    `<iframe>`                   |                    `<script>`                   |     `<script type="javascript/blocked">`    |      `document.createElement('script')`     |
+|------------------------|:-----------------------------------------------:|:-----------------------------------------------:|:-------------------------------------------:|:-------------------------------------------:|
+| **Prevents loading**   | - |  ![](https://badges.herokuapp.com/browsers?firefox=-60&googlechrome=-66&safari=-11&iexplore=-11&microsoftedge=-17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=-11&iexplore=-11&microsoftedge=-17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=-11&microsoftedge=-17) |
+| **Prevents execution** | yes | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=11&microsoftedge=17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=11&microsoftedge=17) | ![](https://badges.herokuapp.com/browsers?firefox=60&googlechrome=66&safari=11&iexplore=11&microsoftedge=17) |
 
 The most 'advanced' javascript feature that `yett` uses is [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver), which is compatible with all major browsers as well as `IE11`.
 
@@ -198,7 +215,7 @@ Scripts loaded using XMLHttpRequest and Fetch are not blocked. It would be trivi
 
 ## Suggestions
 
-If you have any request or feedback for us feel free to open an [issue](https://github.com/elbywan/yett/issues)!
+If you have any request or feedback for us feel free to open an [issue](https://github.com/pronego/yett/issues)!
 
 So far we’re using this library for analytics, but it could also be used to block advertising until consent, and other things we haven’t thought about yet. We’re excited to see what use cases the community comes up with!
 
