@@ -2,17 +2,36 @@ import { patterns, TYPE_ATTRIBUTE } from './variables'
 
 export const isOnBlacklist = (src, type) => (
     src && (!type || type !== TYPE_ATTRIBUTE) &&
-    isBlacklistedSource(src)
-
+    isBlacklistedSource(src, false)
 )
 
-export const isBlacklistedSource = function(src) {
+export const isOnBlacklistKey = (src, type) => (
+    src && (!type || type !== TYPE_ATTRIBUTE) &&
+    isBlacklistedSource(src, true)
+)
+
+export const isBlacklistedSource = function(src, return_key) {
   const srcStart = src === undefined ? "" : src.toString().split("?")[0];
-  return srcStart &&
+  let i = null;
+  if (srcStart &&
   (
-    (!patterns.blacklist || patterns.blacklist.some(pattern => pattern.test(srcStart))) &&
-    (!patterns.whitelist || patterns.whitelist.every(pattern => !pattern.test(srcStart)))
-  )
+    // No blacklist exists or one matches
+    (!patterns.blacklist || patterns.blacklist.some((pattern, index) => {
+        if (pattern.test(srcStart)) {
+            i = index; // Remember index in blacklist
+            return true;
+        } else {
+            return false;
+        }
+    }))
+
+    // No whitelist or all do not match
+    && (!patterns.whitelist || patterns.whitelist.every(pattern => !pattern.test(srcStart)))
+  )) {
+      return (return_key ? i : true);
+  }
+  else
+      return false;
 }
 
 export const willBeUnblocked = function(script) {

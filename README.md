@@ -96,6 +96,14 @@ Yett needs a `blacklist`, which is an array of regexes to test urls against.
         /piwik\.php/,
         /cdn\.mxpnl\.com/
     ]
+    
+    // Optionally, specify labels for the blacklist entries in the same order (= same array keys)
+    YETT_BLACKLIST_LABELS = [
+        'Google Analytics',
+        'Piwik',
+        'MX PNL'
+    ]
+    
     // OR
     YETT_WHITELIST = [
         /my-whitelisted-domain/

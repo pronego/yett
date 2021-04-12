@@ -1,5 +1,5 @@
-import {backupElements, TYPE_ATTRIBUTE, features} from './variables'
-import { isOnBlacklist } from './checks'
+import {backupElements, TYPE_ATTRIBUTE, features, patterns} from './variables'
+import { isOnBlacklistKey } from './checks'
 
 // Setup a mutation observer to track DOM insertion
 export const observer = new MutationObserver(mutations => {
@@ -14,8 +14,8 @@ export const observer = new MutationObserver(mutations => {
                 const type = node.type
 
                 // If the src is inside the blacklist and is not inside the whitelist
-                if(isOnBlacklist(src, type)) {
-
+                let blacklistIndex;
+                if((blacklistIndex = isOnBlacklistKey(src, type)) != false) {
                     // We backup the node
                     backupElements.blacklisted.push([node, node.type])
 
@@ -33,6 +33,7 @@ export const observer = new MutationObserver(mutations => {
 
                     // In case of iframe feature, add placeholder block
                     if (features.iframe && node.tagName === 'IFRAME') {
+                        let label = patterns.blacklistlabels[blacklistIndex] ? '<br/>' + patterns.blacklistlabels[blacklistIndex] : ''
                         let iframePlaceholder = document.createElement('div')
                         iframePlaceholder.setAttribute('data-src', src)
                         // Copy styles from iframe
@@ -47,7 +48,8 @@ export const observer = new MutationObserver(mutations => {
                         iframePlaceholder.style.maxWidth = '100%'
                         iframePlaceholder.classList.add('iframe-blocked')
                         // Add text + Button
-                        iframePlaceholder.innerHTML = '<p style="text-align: center">'+features.iframe_blocked_text+'<br/><button onclick="yett.unblock(\''+src+'\')>'+features.iframe_blocked_btn_unblock+'</button></p>'
+                        iframePlaceholder.innerHTML = '<div style="text-align: center"><p>'+features.iframe_blocked_text+label+'</p>'
+                            + '<p><button onclick="yett.unblock(\''+src+'\')">'+features.iframe_blocked_btn_unblock+'</button></p></div>'
                         node.parentElement && node.parentElement.insertBefore(iframePlaceholder, node)
                     }
 
