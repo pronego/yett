@@ -47,7 +47,7 @@ export const observer = new MutationObserver(mutations => {
                         iframePlaceholder.style.height = node.getAttribute('height')+'px'
                         iframePlaceholder.style.maxWidth = '100%'
                         iframePlaceholder.classList.add('iframe-blocked')
-                        // Add text + Button
+                        // Add text + Button; in context WMM, use: class="toggleConsentManager" instead of onclick attribute
                         iframePlaceholder.innerHTML = '<div style="text-align: center"><p>'+features.iframe_blocked_text+label+'</p>'
                             + '<p><button onclick="yett.unblock(\''+src+'\')">'+features.iframe_blocked_btn_unblock+'</button></p></div>'
                         node.parentElement && node.parentElement.insertBefore(iframePlaceholder, node)
