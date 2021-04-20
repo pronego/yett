@@ -11,7 +11,7 @@ export const isOnBlacklistKey = (src, type) => (
 )
 
 export const isBlacklistedSource = function(src, return_key) {
-  const srcStart = src === undefined ? "" : src.toString().split("?")[0];
+  const srcStart = (src === undefined || src == null ? "" : src.toString().split("?")[0]);
   let i = null;
   if (srcStart &&
   (

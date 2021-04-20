@@ -14,8 +14,8 @@ export const observer = new MutationObserver(mutations => {
                 const type = node.type
 
                 // If the src is inside the blacklist and is not inside the whitelist
-                let blacklistIndex;
-                if((blacklistIndex = isOnBlacklistKey(src, type)) != false) {
+                let blacklistIndex = isOnBlacklistKey(src, type);
+                if(blacklistIndex !== null && blacklistIndex !== false) {
                     // We backup the node
                     backupElements.blacklisted.push([node, node.type])
 
