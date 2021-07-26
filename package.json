@@ -65,5 +65,8 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-uglify": "^6.0.4",
     "uglify-es": "^3.3.9"
+  },
+  "dependencies": {
+    "caniuse-lite": "^1.0.30001246"
   }
 }
