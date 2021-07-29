@@ -13,6 +13,16 @@ export const observer = new MutationObserver(mutations => {
                 const src = node.src || node.getAttribute('yett-src')
                 const type = node.type
 
+                // Special case for Contao dlh_googlemaps control script => Add button to placeholder
+                if (node.tagName === 'SCRIPT' && node.text && node.text.indexOf('dlh_googlemap') !== -1) {
+                    let contao_gmap = document.getElementsByClassName('dlh_googlemap')
+                    for (let i = 0; i < contao_gmap.length; i++) {
+                        // Add text + Button; in context WMM, use: class="toggleConsentManager" instead of onclick attribute
+                        contao_gmap[i].innerHTML = '<div style="text-align: center"><p>'+features.iframe_blocked_text+' Google Maps'+'</p>'
+                            + '<p><button class="toggleConsentManager">'+features.iframe_blocked_btn_unblock+'</button></p></div>'
+                    }
+                }
+
                 // If the src is inside the blacklist and is not inside the whitelist
                 let blacklistIndex = isOnBlacklistKey(src, type);
                 if(blacklistIndex !== null && blacklistIndex !== false) {
