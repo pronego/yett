@@ -94,6 +94,7 @@ export const unblock = function(...scriptUrlsOrRegexes) {
                 // Special for Contao: Google Maps integrated with dlh_googlemaps extension -> we have to call init functions again
                 let contao_gmap = document.getElementsByClassName('dlh_googlemap')
                 for (let i = 0; i < contao_gmap.length; i++) {
+                    contao_gmap[i].classList.remove("blocked");
                     // check for function names of type gmap1_allow() and call
                     let f = 'gmap'+(i+1)+'_initialize';
                     if (typeof window[f] === 'function') {
